@@ -1,0 +1,19 @@
+{
+  "name": "interlinker",
+  "version": "1.0.0",
+  "description": "Links mulitiple inputs togheter",
+  "main": "interlinker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arcs-/Interlinker.git"
+  },
+  "author": "Patrick Stillhart (arcs-)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arcs-/Interlinker/issues"
+  },
+  "homepage": "https://github.com/arcs-/Interlinker#readme"
+}
