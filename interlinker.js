@@ -65,13 +65,20 @@
                 continue
             }
 
-            if (!conditionElement.type) var eventListenerType = 'input'
-            else if (conditionElement.type == 'checkbox') var eventListenerType = 'click'
-            else var eventListenerType = 'input'
-
+            var listeners = []
             var functionReference = this.refresh.bind(this)
-            conditionElement.addEventListener(eventListenerType, functionReference)
-            this.checks.push({ conditionElement, reverse, eventListenerType, functionReference })
+
+            if (!conditionElement.type) listeners.push(conditionElement.addEventListener('input', functionReference))
+            else if (conditionElement.type == 'checkbox') listeners.push(conditionElement.addEventListener('change', functionReference))
+            else if (conditionElement.type == 'radio') {
+                var sibligs = document.querySelectorAll('input[name="' + conditionElement.name + '"]')
+                for (var j = 0, sibling; sibling = sibligs[j++];) {
+                    listeners.push(sibling.addEventListener('change', functionReference))
+                }
+            }
+            else listeners.push(conditionElement.addEventListener('input', functionReference))
+
+            this.checks.push({ conditionElement, reverse, functionReference, listeners })
 
         }
 
@@ -81,22 +88,29 @@
 
         destroy: function () {
             for (var i = 0, check; check = this.checks[i++];) {
-                this.conditionElement.removeEventListener(check.eventListenerType, check.functionReference);
+                for (var j = 0, listener; listener = check.listeners[j++];) {
+                    this.conditionElement.removeEventListener(check.eventListenerType, listener);
+                }
             }
         },
 
         refresh: function () {
 
             for (var i = 0, check; check = this.checks[i++];) {
+                            
                 // text
                 if (!check.conditionElement.type) {
                     if (check.reverse == check.conditionElement.validity.valid) return this.disable(true)
 
-                // chechboxes
+                    // chechboxes
                 } else if (check.conditionElement.type == 'checkbox') {
                     if (check.reverse == check.conditionElement.checked) return this.disable(true)
 
-                // text again
+                    // radio
+                } else if (check.conditionElement.type == 'radio') {
+                    if (check.reverse == check.conditionElement.checked) return this.disable(true)
+
+                    // text again
                 } else if (check.reverse == check.conditionElement.validity.valid) return this.disable(true)
 
             }
