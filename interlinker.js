@@ -20,8 +20,8 @@
 
         Interlinker.clear()
 
-        var allElements = document.getElementsByTagName("*")
-        for (var i = 0, element; element = allElements[i++];) {
+        var followers = document.querySelectorAll("[depends]")
+        for (var i = 0, element; element = followers[i++];) {
 
             var rawCondition = element.getAttribute("depends")
             if (!rawCondition) continue
@@ -60,7 +60,7 @@
             var query = reverse ? condition.trim().substring(1) : condition
 
             var conditionElement = document.getElementById(query)
-            if (!conditionElement || conditionElement.tagName != 'INPUT') {
+            if (!conditionElement || conditionElement.tagName != 'INPUT' && conditionElement.tagName != 'TEXTAREA') {
                 console.error('invalied dependency <', condition, '>')
                 continue
             }
@@ -119,7 +119,7 @@
         },
 
         disable: function (disable) {
-            if (this.element.tagName == 'INPUT') this.element.disabled = disable
+            if (this.element.tagName == 'INPUT' || this.element.tagName == 'TEXTAREA' ) this.element.disabled = disable
             else disable ? this.element.classList.add('disabled') : this.element.classList.remove('disabled')
 
             return disable
